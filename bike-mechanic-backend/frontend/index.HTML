@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bike Pro Mechanic Shop - Services & User Auth</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+  /* Reset and base */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    background: #f7f9fc;
+    color: #333;
+    scroll-behavior: smooth;
+  }
+  a {
+    color: #0077cc;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* Container */
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  header {
+    background-color: #1e212d;
+    padding: 1rem 0;
+  }
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+  }
+  .logo {
+    font-weight: 700;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+  }
+  nav ul {
+    display: flex;
+    gap: 1.5rem;
+    list-style-type: none;
+  }
+  nav ul li {
+    padding: 0.2rem 0;
+  }
+  nav ul li a {
+    color: #eee;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+  }
+  nav ul li a:hover {
+    color: #00bfa6;
+  }
+
+  /* Hero */
+  .hero {
+    margin-top: 2rem;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  }
+  .hero img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    filter: brightness(0.85);
+    transition: filter 0.3s ease;
+  }
+  .hero:hover img {
+    filter: brightness(1);
+  }
+  .hero-text {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    transform: translateY(-50%);
+    color: #fff;
+  }
+  .hero-text h1 {
+    font-size: 3.2rem;
+    margin-bottom: 0.3rem;
+    letter-spacing: 3px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+  }
+  .hero-text p {
+    font-size: 1.3rem;
+    max-width: 480px;
+    font-weight: 500;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+  }
+
+  /* Services */
+  section.services {
+    margin: 4rem 0;
+    text-align: center;
+  }
+  section.services h2 {
+    font-size: 2.6rem;
+    color: #1e212d;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+  section.services p.subtitle {
+    font-weight: 500;
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 3rem;
+  }
+  .service-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2.5rem;
+  }
+  .service-item {
+    background: white;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    border-radius: 15px;
+    padding: 2rem 1.5rem;
+    width: 280px;
+    transition: transform 0.3s ease;
+  }
+  .service-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+  }
+  .service-icon {
+    font-size: 3rem;
+    color: #00bfa6;
+    margin-bottom: 1.3rem;
+  }
+  .service-title {
+    font-weight: 600;
+    font-size: 1.4rem;
+    margin-bottom: 0.8rem;
+  }
+  .service-desc {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  /* About */
+  section.about {
+    background: #00bfa6;
+    color: white;
+    padding: 3rem 1rem;
+    border-radius: 15px;
+    margin-bottom: 4rem;
+    box-shadow: 0 8px 25px rgba(0,191,166,0.3);
+  }
+  section.about .container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2rem;
+  }
+  section.about img {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  }
+  section.about .about-text {
+    flex: 1 1 400px;
+  }
+  section.about h2 {
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+  section.about p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+  }
+
+  /* Gallery */
+  section.gallery {
+    margin-bottom: 4rem;
+    text-align: center;
+  }
+  section.gallery h2 {
+    font-size: 2.6rem;
+    color: #1e212d;
+    margin-bottom: 2rem;
+    font-weight: 700;
+  }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap: 1.5rem;
+  }
+  .gallery-grid img {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    object-fit: cover;
+    height: 180px;
+    transition: transform 0.25s ease;
+    cursor: pointer;
+  }
+  .gallery-grid img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+  }
+
+  /* Contact */
+  section.contact {
+    background: #1e212d;
+    color: white;
+    padding: 3rem 1rem;
+    border-radius: 15px;
+  }
+  section.contact h2 {
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+  section.contact p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  .contact-info {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    max-width: 400px;
+  }
+  .btn-contact, .btn-login-open  {
+    background: #00bfa6;
+    border: none;
+    color: #1e212d;
+    font-weight: 700;
+    padding: 0.9rem 2.4rem;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,191,166,0.5);
+    margin-right: 1rem;
+  }
+  .btn-contact:hover, .btn-login-open:hover {
+    background: #009f8a;
+    color: white;
+    box-shadow: 0 8px 25px rgba(0,159,138,0.8);
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 3rem;
+    padding: 1.3rem 0;
+    text-align: center;
+    color: #777;
+    font-size: 0.95rem;
+  }
+
+  /* Modal overlay and modal box */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right:0;
+    bottom:0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    overflow-y: auto;
+    padding: 1rem;
+  }
+  .modal-overlay.active {
+    display: flex;
+  }
+  .modal {
+    background: white;
+    border-radius: 15px;
+    max-width: 480px;
+    width: 100%;
+    padding: 2rem 2.5rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal h3 {
+    margin-top: 0;
+    margin-bottom: 1.3rem;
+    font-weight: 700;
+    font-size: 1.9rem;
+    color: #1e212d;
+    text-align: center;
+  }
+  .modal label {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+    display: block;
+    margin: 10px 0 4px;
+  }
+  .modal input[type="text"],
+  .modal input[type="tel"],
+  .modal input[type="email"],
+  .modal input[type="number"],
+  .modal textarea {
+    padding: 0.7rem 1rem;
+    font-size: 1rem;
+    border: 1.8px solid #ccc;
+    border-radius: 8px;
+    width: 100%;
+    resize: vertical;
+    transition: border-color 0.25s ease;
+  }
+  .modal input[type="text"]:focus,
+  .modal input[type="tel"]:focus,
+  .modal input[type="email"]:focus,
+  .modal input[type="number"]:focus,
+  .modal textarea:focus {
+    outline: none;
+    border-color: #00bfa6;
+  }
+  .modal textarea {
+    min-height: 80px;
+  }
+  .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.3rem;
+  }
+  .modal-buttons button {
+    padding: 0.9rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 700;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,191,166,0.5);
+    transition: background 0.25s ease;
+    flex: 1;
+    margin: 0 0.3rem;
+  }
+  .btn-submit {
+    background: #00bfa6;
+    color: #1e212d;
+  }
+  .btn-submit:hover {
+    background: #009f8a;
+    color: white;
+    box-shadow: 0 8px 25px rgba(0,159,138,0.8);
+  }
+  .btn-cancel {
+    background: #ccc;
+    color: #555;
+  }
+  .btn-cancel:hover {
+    background: #aaa;
+    color: white;
+  }
+  .message {
+    margin-top: 0.8rem;
+    min-height: 1.4rem;
+    font-weight: 600;
+  }
+  .message.error {
+    color: #e63946;
+  }
+  .message.success {
+    color: #2a9d8f;
+  }
+
+  /* Responsive */
+  @media (max-width:720px) {
+    .hero-text h1 {
+      font-size: 2.4rem;
+    }
+    .hero-text p {
+      font-size: 1.1rem;
+    }
+    section.services {
+      padding: 0 1rem;
+    }
+    .modal {
+      max-width: 95vw;
+      padding: 1.5rem 1.8rem;
+    }
+    .modal-buttons button {
+      margin: 0 0.2rem;
+    }
+  }
+</style>
+
+<!-- FontAwesome for icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+
+<header>
+  <div class="container nav-container">
+    <div class="logo" onclick="window.scrollTo({top:0, behavior:'smooth'})">Bike Pro Mechanic</div>
+    <nav>
+      <ul>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><button class="btn-login-open" id="openAuthModalBtn">Login / Register</button></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <img src="https://images.unsplash.com/photo-1518655048521-f130df041f66?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=1470&amp;q=80" alt="Bike mechanic at work" />
+  <div class="hero-text">
+    <h1>Expert Bike Services</h1>
+    <p>Your trusted bike mechanic shop for repairs, maintenance, and upgrades.</p>
+  </div>
+</section>
+
+<section id="services" class="services container">
+  <h2>Our Services</h2>
+  <p class="subtitle">Quality bike repairs and maintenance delivered with care and expertise.</p>
+  <div class="service-list">
+    <div class="service-item">
+      <div class="service-icon"><i class="fas fa-tools"></i></div>
+      <div class="service-title">General Bike Repair</div>
+      <div class="service-desc">Comprehensive repairs including brakes, gears, tires, and more to keep your ride smooth.</div>
+    </div>
+    <div class="service-item">
+      <div class="service-icon"><i class="fas fa-wrench"></i></div>
+      <div class="service-title">Tune-Ups &amp; Maintenance</div>
+      <div class="service-desc">Regular tune-ups to optimize performance and prevent future issues.</div>
+    </div>
+    <div class="service-item">
+      <div class="service-icon"><i class="fas fa-bicycle"></i></div>
+      <div class="service-title">Custom Upgrades</div>
+      <div class="service-desc">Upgrade your bike with premium parts and accessories tailored to your style.</div>
+    </div>
+    <div class="service-item">
+      <div class="service-icon"><i class="fas fa-battery-half"></i></div>
+      <div class="service-title">Electric Bike Services</div>
+      <div class="service-desc">Specialized maintenance and repair for e-bikes and electric components.</div>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="about">
+  <div class="container">
+    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=690&amp;q=80" alt="Our bike mechanic shop" />
+    <div class="about-text">
+      <h2>About Bike Pro Mechanic</h2>
+      <p>At Bike Pro Mechanic, we are passionate about bikes and committed to providing top-quality mechanical services. Our trained professionals bring years of experience to every repair and upgrade, ensuring your bike gets the care it deserves. Whether you need a quick fix or a full tune-up, we make sure your ride is safe, reliable, and fun.</p>
+    </div>
+  </div>
+</section>
+
+<section id="gallery" class="gallery container">
+  <h2>Gallery</h2>
+  <div class="gallery-grid">
+    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Bike maintenance work" />
+    <img src="https://images.unsplash.com/photo-1504292338413-3f1fbbaf4d27?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Mechanic fixing bike tire" />
+    <img src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Bike repair tools" />
+    <img src="https://images.unsplash.com/photo-1429087969512-1e85aab2683d?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Bike brake repair" />
+    <img src="https://images.unsplash.com/photo-1518655048521-349d9a7d503a?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Close-up bike gear" />
+    <img src="https://images.unsplash.com/photo-1520020296935-b21756eb39c8?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Bike mechanic workshop" />
+  </div>
+</section>
+
+<section id="contact" class="contact container">
+  <h2>Contact Us</h2>
+  <p>Ready to get your bike serviced? Reach out to us!</p>
+  <div class="contact-info">
+    <p><strong>Address:</strong> 123 Cycle Lane, Bike City, BC 12345</p>
+    <p><strong>Phone:</strong> (123) 456-7890</p>
+    <p><strong>Email:</strong> info@bikepromechanic.com</p>
+  </div>
+  <button class="btn-contact" id="getQuoteBtn">Get a Free Quote</button>
+</section>
+
+<footer>
+  &copy; 2024 Bike Pro Mechanic Shop. All rights reserved.
+</footer>
+
+<!-- Modal: Authentication (Login/Register OTP) -->
+<div class="modal-overlay" id="authModal" aria-hidden="true" role="dialog" aria-labelledby="authModalTitle">
+  <div class="modal" role="document">
+    <h3 id="authModalTitle">User Login & Registration</h3>
+
+    <!-- Registration form -->
+    <div id="registerForm">
+      <label for="regPhone">Phone Number (optional)</label>
+      <input type="tel" id="regPhone" placeholder="+1234567890" autocomplete="tel" />
+
+      <label for="regEmail">Email (optional)</label>
+      <input type="email" id="regEmail" placeholder="you@example.com" autocomplete="email" />
+
+      <button id="btnRequestOtp">Request OTP</button>
+      <div class="message" id="regMessage"></div>
+    </div>
+
+    <!-- OTP verification form -->
+    <div id="otpForm" style="display:none;">
+      <label for="otpInput">Enter OTP</label>
+      <input type="number" id="otpInput" placeholder="6-digit OTP" />
+
+      <button id="btnVerifyOtp">Verify OTP</button>
+      <div class="message" id="otpMessage"></div>
+    </div>
+
+    <!-- Login form -->
+    <hr style="margin:1.5rem 0;" />
+    <div id="loginForm">
+      <label for="loginInput">Phone or Email</label>
+      <input type="text" id="loginInput" placeholder="+1234567890 or you@example.com" autocomplete="username" />
+      <button id="btnLogin">Login</button>
+      <div class="message" id="loginMessage"></div>
+    </div>
+
+    <div class="modal-buttons" style="margin-top:2rem;">
+      <button class="btn-cancel" id="closeAuthModal">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Backend URL - adjust if hosted remotely or different port
+  const backendURL = 'http://127.0.0.1:5000';
+
+  // Modal and elements references
+  const authModal = document.getElementById('authModal');
+  const openAuthModalBtn = document.getElementById('openAuthModalBtn');
+  const closeAuthModalBtn = document.getElementById('closeAuthModal');
+
+  const regPhoneInput = document.getElementById('regPhone');
+  const regEmailInput = document.getElementById('regEmail');
+  const btnRequestOtp = document.getElementById('btnRequestOtp');
+  const regMessage = document.getElementById('regMessage');
+
+  const otpForm = document.getElementById('otpForm');
+  const otpInput = document.getElementById('otpInput');
+  const btnVerifyOtp = document.getElementById('btnVerifyOtp');
+  const otpMessage = document.getElementById('otpMessage');
+
+  const registerForm = document.getElementById('registerForm');
+
+  const loginInput = document.getElementById('loginInput');
+  const btnLogin = document.getElementById('btnLogin');
+  const loginMessage = document.getElementById('loginMessage');
+
+  // Variables to keep track
+  let currentRegistration = {
+    phone: null,
+    email: null,
+  };
+
+  // Functions for validation
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
+  function isValidPhone(phone) {
+    return /^\+?[\d\s-]{8,}$/.test(phone);
+  }
+
+  // Open modal
+  function openModal() {
+    authModal.classList.add('active');
+    authModal.setAttribute('aria-hidden', 'false');
+    resetAuthForms();
+  }
+
+  // Close modal
+  function closeModal() {
+    authModal.classList.remove('active');
+    authModal.setAttribute('aria-hidden', 'true');
+  }
+
+  // Reset all auth forms and messages
+  function resetAuthForms() {
+    regPhoneInput.value = '';
+    regEmailInput.value = '';
+    regMessage.textContent = '';
+    regMessage.className = 'message';
+
+    otpInput.value = '';
+    otpMessage.textContent = '';
+    otpMessage.className = 'message';
+    otpForm.style.display = 'none';
+    registerForm.style.display = 'block';
+
+    loginInput.value = '';
+    loginMessage.textContent = '';
+    loginMessage.className = 'message';
+
+    currentRegistration = { phone: null, email: null };
+  }
+
+  // Request OTP
+  btnRequestOtp.addEventListener('click', async () => {
+    regMessage.textContent = '';
+    otpMessage.textContent = '';
+    const phone = regPhoneInput.value.trim();
+    const email = regEmailInput.value.trim();
+    if (!phone && !email) {
+      regMessage.textContent = 'Please enter a phone or email to register.';
+      regMessage.className = 'message error';
+      return;
+    }
+    if (email && !isValidEmail(email)) {
+      regMessage.textContent = 'Please enter a valid email address.';
+      regMessage.className = 'message error';
+      return;
+    }
+    if (phone && !isValidPhone(phone)) {
+      regMessage.textContent = 'Please enter a valid phone number.';
+      regMessage.className = 'message error';
+      return;
+    }
+
+    btnRequestOtp.disabled = true;
+    regMessage.textContent = 'Sending OTP...';
+    regMessage.className = 'message';
+
+    try {
+      const response = await fetch(`${backendURL}/register`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({phone: phone || null, email: email || null}),
+      });
+      const data = await response.json();
+      if (data.success) {
+        regMessage.textContent = 'OTP sent! Please check your phone/email.';
+        regMessage.className = 'message success';
+        currentRegistration.phone = phone || null;
+        currentRegistration.email = email || null;
+        otpForm.style.display = 'block';
+        registerForm.style.display = 'none';
+        otpInput.focus();
+      } else {
+        regMessage.textContent = data.message || 'Failed to send OTP.';
+        regMessage.className = 'message error';
+      }
+    } catch (error) {
+      regMessage.textContent = 'Error connecting to backend.';
+      regMessage.className = 'message error';
+    }
+    btnRequestOtp.disabled = false;
+  });
+
+  // Verify OTP
+  btnVerifyOtp.addEventListener('click', async () => {
+    otpMessage.textContent = '';
+    const otp = otpInput.value.trim();
+    if (!otp || otp.length !== 6) {
+      otpMessage.textContent = 'Please enter a valid 6-digit OTP.';
+      otpMessage.className = 'message error';
+      return;
+    }
+    btnVerifyOtp.disabled = true;
+    otpMessage.textContent = 'Verifying OTP...';
+    otpMessage.className = 'message';
+
+    try {
+      const bodyData = {
+        otp: otp,
+      };
+      if (currentRegistration.phone) bodyData.phone = currentRegistration.phone;
+      if (currentRegistration.email) bodyData.email = currentRegistration.email;
+
+      const response = await fetch(`${backendURL}/verify-otp`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(bodyData),
+      });
+      const data = await response.json();
+      if (data.success) {
+        otpMessage.textContent = 'Registration successful! You can now login.';
+        otpMessage.className = 'message success';
+
+        // Reset forms and hide OTP section
+        otpInput.value = '';
+        otpForm.style.display = 'none';
+        registerForm.style.display = 'block';
+        regPhoneInput.value = '';
+        regEmailInput.value = '';
+        currentRegistration = { phone: null, email: null };
+      } else {
+        otpMessage.textContent = data.message || 'OTP verification failed.';
+        otpMessage.className = 'message error';
+      }
+    } catch (error) {
+      otpMessage.textContent = 'Error verifying OTP.';
+      otpMessage.className = 'message error';
+    }
+    btnVerifyOtp.disabled = false;
+  });
+
+  // Login
+  btnLogin.addEventListener('click', async () => {
+    loginMessage.textContent = '';
+    const loginVal = loginInput.value.trim();
+    if (!loginVal) {
+      loginMessage.textContent = 'Please enter phone or email to login.';
+      loginMessage.className = 'message error';
+      return;
+    }
+
+    btnLogin.disabled = true;
+    loginMessage.textContent = 'Logging in...';
+    loginMessage.className = 'message';
+
+    let bodyData = {};
+    if (isValidEmail(loginVal)) {
+      bodyData.email = loginVal;
+    } else if (isValidPhone(loginVal)) {
+      bodyData.phone = loginVal;
+    } else {
+      loginMessage.textContent = 'Invalid phone or email format.';
+      loginMessage.className = 'message error';
+      btnLogin.disabled = false;
+      return;
+    }
+
+    try {
+      const response = await fetch(`${backendURL}/login`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(bodyData),
+      });
+      const data = await response.json();
+      if (data.success) {
+        loginMessage.textContent = 'Login successful! Welcome.';
+        loginMessage.className = 'message success';
+        // Optionally close modal or redirect user
+        setTimeout(() => {
+          closeModal();
+        }, 1500);
+      } else {
+        loginMessage.textContent = data.message || 'Login failed.';
+        loginMessage.className = 'message error';
+      }
+    } catch (error) {
+      loginMessage.textContent = 'Error connecting to backend.';
+      loginMessage.className = 'message error';
+    }
+    btnLogin.disabled = false;
+  });
+
+  // Open & close modal event listeners
+  openAuthModalBtn.addEventListener('click', openModal);
+  closeAuthModalBtn.addEventListener('click', closeModal);
+
+  // Close modal if clicked outside content
+  authModal.addEventListener('click', (e) => {
+    if (e.target === authModal) {
+      closeModal();
+    }
+  });
+
+  // Accessibility: close modal with ESC key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && authModal.classList.contains('active')) {
+      closeModal();
+    }
+  });
+
+  // "Get a Free Quote" button - you can implement your quote modal here as needed
+  document.getElementById('getQuoteBtn').addEventListener('click', () => {
+    alert('This would open the quote form (not changed in this integration).');
+  });
+</script>
+
+</body>
+</html>
+
+
